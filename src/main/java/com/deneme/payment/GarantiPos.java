@@ -1,6 +1,6 @@
 package com.deneme.payment;
 
-// KAVRAMLAR: Polymorphism (PaymentMethod gibi davranabilme)
+
 public class GarantiPos implements PaymentMethod {
     @Override
     public boolean processPayment(double amount) {
