@@ -18,6 +18,9 @@ public class Order {
     public void addProduct(Product product) {
         cart.add(product);
     }
+    public String getOrderId() {
+        return orderId;
+    }
 
     public double getTotalAmount() {
         double total = 0;
