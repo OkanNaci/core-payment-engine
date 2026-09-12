@@ -1,33 +1,37 @@
-
 package com.deneme.payment;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Order {
     private String orderId;
-    private double totalAmount;
     private boolean isPaid;
 
-    // Constructor
-    public Order(String orderId, double totalAmount) {
+
+    private List<Product> cart;
+
+    public Order(String orderId) {
         this.orderId = orderId;
-        this.totalAmount = totalAmount;
         this.isPaid = false;
+        this.cart = new ArrayList<>();
     }
 
-    // ENCAPSULATION
+    public void addProduct(Product product) {
+        cart.add(product);
+    }
+
     public double getTotalAmount() {
-        return totalAmount;
+        double total = 0;
+        for (Product item : cart) {
+            total += item.getPrice();
+        }
+        return total;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public void markAsPaid() {
+        this.isPaid = true;
     }
 
     public boolean isPaid() {
         return isPaid;
-    }
-
-
-    public void markAsPaid() {
-        this.isPaid = true;
     }
 }

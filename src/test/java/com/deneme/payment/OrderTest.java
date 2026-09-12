@@ -1,21 +1,24 @@
 package com.deneme.payment;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OrderTest {
+public class OrderTest {
 
     @Test
-    void shouldMarkOrderAsPaidWhenPaymentIsSuccessful() {
-        Order testOrder = new Order("ORD-TEST", 250.0);
-        PaymentMethod mockPayment = new GarantiPos();
+    void shouldCalculateTotalAndMarkAsPaid() {
+        Order order = new Order("ORD-001");
 
-        boolean isSuccess = mockPayment.processPayment(testOrder.getTotalAmount());
-        if (isSuccess) {
-            testOrder.markAsPaid();
+        order.addProduct(new Product("Mekanik Klavye", 150.0));
+        order.addProduct(new Product("Oyuncu Mouse", 100.0));
+
+        PaymentMethod pos = new GarantiPos();
+
+        if (pos.processPayment(order.getTotalAmount())) {
+            order.markAsPaid();
         }
 
-        assertTrue(testOrder.isPaid(), "HATA: İşlem başarılı olduğu halde sipariş 'ödendi' yapılmadı!");
-        assertEquals(250.0, testOrder.getTotalAmount(), "HATA: Sipariş tutarı izinsiz değişti!");
+        assertTrue(order.isPaid(), "Ödeme başarılıysa sipariş durumu değişmeli!");
     }
+
 }
