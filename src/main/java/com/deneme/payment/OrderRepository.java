@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class OrderRepository {
-    private Map<String, Order> database = new HashMap<>();
+    private final Map<String, Order> database = new HashMap<>();
 
-    private Set<String> paidOrders = new HashSet<>();
+    private final Set<String> paidOrders = new HashSet<>();
 
     public void save(Order order) {
         database.put(order.getOrderId(), order);

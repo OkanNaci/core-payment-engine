@@ -3,11 +3,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-    private String orderId;
+    private final String orderId;
     private boolean isPaid;
 
 
-    private List<Product> cart;
+    private final List<Product> cart;
 
     public Order(String orderId) {
         this.orderId = orderId;
