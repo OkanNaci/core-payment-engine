@@ -1,10 +1,10 @@
 package com.deneme.payment;
 
+import com.deneme.payment.exception.NoRefundPendingException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class RefundService {
-
 
     private final Deque<Order> refundStack;
 
@@ -18,7 +18,7 @@ public class RefundService {
 
     public Order processNextRefund() {
         if (refundStack.isEmpty()) {
-            return null;
+            throw new NoRefundPendingException("Kritik Uyarı: İade edilecek herhangi bir işlem bulunamadı!");
         }
         return refundStack.pop();
     }
