@@ -1,23 +1,23 @@
 package com.deneme.payment;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
     private final String orderId;
-    private boolean isPaid;
-
-
+    private OrderStatus status; // Güvenlik kalkanımız
     private final List<Product> cart;
 
     public Order(String orderId) {
         this.orderId = orderId;
-        this.isPaid = false;
+        this.status = OrderStatus.PENDING; // Varsayılan durum
         this.cart = new ArrayList<>();
     }
 
     public void addProduct(Product product) {
         cart.add(product);
     }
+
     public String getOrderId() {
         return orderId;
     }
@@ -30,11 +30,20 @@ public class Order {
         return total;
     }
 
-    public void markAsPaid() {
-        this.isPaid = true;
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
+    public OrderStatus getStatus() {
+        return status;
+    }
+    // -- GERİYE DÖNÜK UYUMLULUK İÇİN EKLENEN KÖPRÜ METOTLAR --
+
     public boolean isPaid() {
-        return isPaid;
+        return this.status == OrderStatus.COMPLETED;
+    }
+
+    public void markAsPaid() {
+        this.status = OrderStatus.COMPLETED;
     }
 }

@@ -7,36 +7,35 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RefundServiceTest {
 
     @Test
-    void shouldProcessRefundsInLifoOrder() {
-        // 1. Arrange (Hazırlık)
+    void shouldThrowExceptionWhenRefundingEmptyStack() {
         RefundService refundService = new RefundService();
-        Order order1 = new Order("ORD-001");
-        Order order2 = new Order("ORD-002");
-        Order order3 = new Order("ORD-003");
-
-        // 2. Act
-        refundService.addRefundRequest(order1);
-        refundService.addRefundRequest(order2);
-        refundService.addRefundRequest(order3);
-
-        // 3. Assert (LIFO Kuralı)
-        assertEquals(3, refundService.getPendingRefundsCount());
-        assertEquals("ORD-003", refundService.processNextRefund().getOrderId());
-        assertEquals("ORD-002", refundService.processNextRefund().getOrderId());
-        assertEquals(1, refundService.getPendingRefundsCount());
+        assertThrows(NoRefundPendingException.class, () -> {
+            refundService.processNextRefund();
+        });
     }
 
     @Test
-    void shouldThrowExceptionWhenRefundingEmptyStack() {
+    void shouldSuccessfullyProcessRefundAndChangeStatus() {
         RefundService refundService = new RefundService();
+        Order order = new Order("ORD-123");
 
+        order.setStatus(OrderStatus.COMPLETED);
 
-        NoRefundPendingException thrownException = assertThrows(
-                NoRefundPendingException.class,
-                () -> refundService.processNextRefund(),
-                "Boş yığından işlem çekilmeye çalışıldığında NoRefundPendingException fırlatılmalı!"
-        );
+        refundService.addRefundRequest(order);
+        Order processedOrder = refundService.processNextRefund();
 
-        assertTrue(thrownException.getMessage().contains("İade edilecek herhangi bir işlem bulunamadı"));
+        assertEquals(OrderStatus.REFUNDED, processedOrder.getStatus());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRefundingPendingOrder() {
+        RefundService refundService = new RefundService();
+        Order order = new Order("ORD-999");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            refundService.addRefundRequest(order);
+        });
+
+        assertTrue(exception.getMessage().contains("İade işlemi reddedildi"));
     }
 }

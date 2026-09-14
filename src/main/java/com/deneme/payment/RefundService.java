@@ -6,24 +6,24 @@ import java.util.Deque;
 
 public class RefundService {
 
-    private final Deque<Order> refundStack;
-
-    public RefundService() {
-        this.refundStack = new ArrayDeque<>();
-    }
+    private Deque<Order> refundStack = new ArrayDeque<>();
 
     public void addRefundRequest(Order order) {
+        if (order.getStatus() != OrderStatus.COMPLETED) {
+            throw new IllegalArgumentException("İade işlemi reddedildi! Sadece ödemesi tamamlanmış (COMPLETED) siparişler iade edilebilir. Mevcut durum: " + order.getStatus());
+        }
         refundStack.push(order);
     }
 
     public Order processNextRefund() {
         if (refundStack.isEmpty()) {
-            throw new NoRefundPendingException("Kritik Uyarı: İade edilecek herhangi bir işlem bulunamadı!");
+            throw new NoRefundPendingException("İade edilecek herhangi bir işlem bulunamadı!");
         }
-        return refundStack.pop();
-    }
 
-    public int getPendingRefundsCount() {
-        return refundStack.size();
+        Order refundedOrder = refundStack.pop();
+
+        refundedOrder.setStatus(OrderStatus.REFUNDED);
+
+        return refundedOrder;
     }
 }
