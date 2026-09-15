@@ -7,4 +7,9 @@ public class CryptoWallet implements PaymentMethod {
         System.out.println(amount + " USDT cüzdandan transfer edildi.");
         return true;
     }
+    @Override
+    public boolean processRefund(double amount) {
+        System.out.println("Kripto cüzdanına iade yapılıyor... Tutar: " + amount);
+        return true;
+    }
 }

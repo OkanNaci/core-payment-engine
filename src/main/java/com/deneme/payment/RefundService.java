@@ -8,9 +8,15 @@ public class RefundService {
 
     private Deque<Order> refundStack = new ArrayDeque<>();
 
+    private final PaymentMethod paymentMethod;
+
+    public RefundService(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public void addRefundRequest(Order order) {
         if (order.getStatus() != OrderStatus.COMPLETED) {
-            throw new IllegalArgumentException("İade işlemi reddedildi! Sadece ödemesi tamamlanmış (COMPLETED) siparişler iade edilebilir. Mevcut durum: " + order.getStatus());
+            throw new IllegalArgumentException("İade işlemi reddedildi! Sadece ödemesi tamamlanmış siparişler iade edilebilir. Mevcut durum: " + order.getStatus());
         }
         refundStack.push(order);
     }
@@ -22,7 +28,13 @@ public class RefundService {
 
         Order refundedOrder = refundStack.pop();
 
-        refundedOrder.setStatus(OrderStatus.REFUNDED);
+        boolean isRefundSuccessful = paymentMethod.processRefund(100.0);
+
+        if (isRefundSuccessful) {
+            refundedOrder.setStatus(OrderStatus.REFUNDED);
+        } else {
+            refundedOrder.setStatus(OrderStatus.FAILED);
+        }
 
         return refundedOrder;
     }
