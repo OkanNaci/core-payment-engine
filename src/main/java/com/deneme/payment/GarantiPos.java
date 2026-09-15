@@ -8,4 +8,9 @@ public class GarantiPos implements PaymentMethod {
         System.out.println(amount + " TL kredi kartından çekildi.");
         return true;
     }
+    @Override
+    public boolean processRefund(double amount) {
+        System.out.println("Kredi kartina iade yapılıyor... Tutar: " + amount);
+        return true;
+    }
 }

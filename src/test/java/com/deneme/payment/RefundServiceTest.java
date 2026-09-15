@@ -6,9 +6,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RefundServiceTest {
 
+
+    private final PaymentMethod fakePaymentMethod = new PaymentMethod() {
+        @Override
+        public boolean processPayment(double amount) { return true; }
+
+        @Override
+        public boolean processRefund(double amount) { return true; }
+    };
+
     @Test
     void shouldThrowExceptionWhenRefundingEmptyStack() {
-        RefundService refundService = new RefundService();
+        RefundService refundService = new RefundService(fakePaymentMethod);
+
         assertThrows(NoRefundPendingException.class, () -> {
             refundService.processNextRefund();
         });
@@ -16,9 +26,8 @@ public class RefundServiceTest {
 
     @Test
     void shouldSuccessfullyProcessRefundAndChangeStatus() {
-        RefundService refundService = new RefundService();
+        RefundService refundService = new RefundService(fakePaymentMethod);
         Order order = new Order("ORD-123");
-
         order.setStatus(OrderStatus.COMPLETED);
 
         refundService.addRefundRequest(order);
@@ -29,13 +38,13 @@ public class RefundServiceTest {
 
     @Test
     void shouldThrowExceptionWhenRefundingPendingOrder() {
-        RefundService refundService = new RefundService();
+        RefundService refundService = new RefundService(fakePaymentMethod);
         Order order = new Order("ORD-999");
+        order.setStatus(OrderStatus.PENDING);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             refundService.addRefundRequest(order);
         });
-
         assertTrue(exception.getMessage().contains("İade işlemi reddedildi"));
     }
 }
