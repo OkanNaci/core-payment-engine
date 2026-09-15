@@ -18,5 +18,24 @@ public class Main {
         } else {
             System.out.println("Ödeme Durumu: Başarısız!");
         }
+
+        OrderRepository repository = new OrderRepository();
+        repository.save(myOrder);
+
+        System.out.println("\n--- OPTIONAL TESTİ ---");
+
+        repository.findById("MAIN-001").ifPresent(bulunanSiparis -> {
+            System.out.println("Sipariş başarıyla bulundu! ID: " + bulunanSiparis.getOrderId());
+        });
+
+        repository.findById("HAYALET-999").ifPresentOrElse(
+                bulunan -> System.out.println("Bu yazı asla yazdırılmayacak, çünkü sipariş yok!"),
+                () -> System.out.println("Hata önlendi: HAYALET-999 ID'li sipariş veritabanında yok!")
+        );
+
+        // STREAM TESTİ İÇERİ ALINDI
+        System.out.println("\n--- STREAM API TESTİ ---");
+        System.out.println("Toplam Ciro: " + repository.calculateTotalRevenue() + " TL");
+
     }
 }

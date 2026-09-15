@@ -2,6 +2,7 @@ package com.deneme.payment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
     private final String orderId;
@@ -22,13 +23,16 @@ public class Order {
         return orderId;
     }
 
-    public double getTotalAmount() {
-        double total = 0;
-        for (Product item : cart) {
-            total += item.getPrice();
+
+        public double getTotalAmount() {
+            double total = 0;
+            for (Product item : cart) {
+                total += item.price();
+            }
+            return total;
         }
-        return total;
-    }
+
+
 
     public void setStatus(OrderStatus status) {
         this.status = status;
@@ -37,7 +41,6 @@ public class Order {
     public OrderStatus getStatus() {
         return status;
     }
-    // -- GERİYE DÖNÜK UYUMLULUK İÇİN EKLENEN KÖPRÜ METOTLAR --
 
     public boolean isPaid() {
         return this.status == OrderStatus.COMPLETED;
@@ -46,4 +49,19 @@ public class Order {
     public void markAsPaid() {
         this.status = OrderStatus.COMPLETED;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderId, order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
+
+
 }
