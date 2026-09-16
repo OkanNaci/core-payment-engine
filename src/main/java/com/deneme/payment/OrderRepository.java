@@ -6,7 +6,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
+import org.springframework.stereotype.Repository;
 
+
+@Repository
 public class OrderRepository {
     private final Map<String, Order> database = new HashMap<>();
     private final Set<String> paidOrders = new HashSet<>();
