@@ -32,13 +32,13 @@ public class OrderRepository {
     public boolean isOrderPaid(String orderId) {
         return paidOrders.contains(orderId);
     }
-    // import java.util.Collection; (gerekirse ekle)
+    // import java.util.Collection;
 
     public double calculateTotalRevenue() {
-        return database.values().stream() // Veritabanındaki tüm siparişleri nehre (Stream) dök
-                .filter(order -> order.getStatus() == OrderStatus.COMPLETED) // Sadece ödenenleri filtrele
-                .mapToDouble(Order::getTotalAmount) // Sadece sipariş tutarlarını al
-                .sum(); // Hepsini topla
+        return database.values().stream()
+                .filter(order -> order.getStatus() == OrderStatus.COMPLETED)
+                .mapToDouble(Order::getTotalAmount)
+                .sum();
     }
 
 }
