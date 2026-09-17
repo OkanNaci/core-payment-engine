@@ -1,5 +1,6 @@
 package com.deneme.payment;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,12 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@RequestBody Order newOrder) {
+        orderService.processNewOrder(newOrder);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
     }
 
     @GetMapping("/{orderId}")

@@ -5,14 +5,22 @@ import java.util.List;
 import java.util.Objects;
 
 public class Order {
-    private final String orderId;
-    private OrderStatus status; // Güvenlik kalkanımız
-    private final List<Product> cart;
+    private String orderId; // Jackson'ın değiştirebilmesi için 'final' kaldırıldı
+    private OrderStatus status = OrderStatus.PENDING;
+    private List<Product> cart = new ArrayList<>(); // 'final' kaldırıldı
 
+    // 1. Spring Boot (Jackson) için ZORUNLU Boş Constructor
+    public Order() {
+    }
+
+    // 2. Bizim eskiden yazdığımız manuel Constructor
     public Order(String orderId) {
         this.orderId = orderId;
-        this.status = OrderStatus.PENDING; // Varsayılan durum
-        this.cart = new ArrayList<>();
+    }
+
+    // 3. Jackson'ın dışarıdan gelen ID'yi içeri yazabilmesi için Setter
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public void addProduct(Product product) {
@@ -23,16 +31,14 @@ public class Order {
         return orderId;
     }
 
-
-        public double getTotalAmount() {
-            double total = 0;
-            for (Product item : cart) {
-                total += item.price();
-            }
-            return total;
+    // Bu sadece hesaplama yapar, JSON'dan dışarıdan değer kabul etmez
+    public double getTotalAmount() {
+        double total = 0;
+        for (Product item : cart) {
+            total += item.price();
         }
-
-
+        return total;
+    }
 
     public void setStatus(OrderStatus status) {
         this.status = status;
@@ -62,6 +68,4 @@ public class Order {
     public int hashCode() {
         return Objects.hash(orderId);
     }
-
-
 }
