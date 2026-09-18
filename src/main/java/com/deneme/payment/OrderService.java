@@ -19,6 +19,20 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    public void addProductToOrder(String orderId, Product newProduct) {
+
+        Optional<Order> orderOptional = orderRepository.findById(orderId);
+
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            order.addProduct(newProduct);
+            orderRepository.save(order);
+            System.out.println("Ürün sepete eklendi: " + newProduct.name());
+        } else {
+            throw new RuntimeException("Sipariş bulunamadı: " + orderId);
+        }
+    }
+
     public Optional<Order> getOrder(String orderId) {
         return orderRepository.findById(orderId);
     }

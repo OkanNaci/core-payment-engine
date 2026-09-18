@@ -9,16 +9,13 @@ public class Order {
     private OrderStatus status = OrderStatus.PENDING;
     private List<Product> cart = new ArrayList<>(); // 'final' kaldırıldı
 
-    // 1. Spring Boot (Jackson) için ZORUNLU Boş Constructor
     public Order() {
     }
 
-    // 2. Bizim eskiden yazdığımız manuel Constructor
     public Order(String orderId) {
         this.orderId = orderId;
     }
 
-    // 3. Jackson'ın dışarıdan gelen ID'yi içeri yazabilmesi için Setter
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
@@ -31,7 +28,6 @@ public class Order {
         return orderId;
     }
 
-    // Bu sadece hesaplama yapar, JSON'dan dışarıdan değer kabul etmez
     public double getTotalAmount() {
         double total = 0;
         for (Product item : cart) {
