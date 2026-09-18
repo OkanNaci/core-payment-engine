@@ -29,9 +29,21 @@ public class OrderController {
         return order.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @PostMapping("/{orderId}/products")
+    public ResponseEntity<Order> addProductToOrder(@PathVariable String orderId, @RequestBody Product newProduct) {
+        try {
+            orderService.addProductToOrder(orderId, newProduct);
+
+            return ResponseEntity.ok(orderService.getOrder(orderId).get());
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @GetMapping("/revenue")
     public ResponseEntity<Double> getRevenue() {
         return ResponseEntity.ok(orderService.getDailyRevenue());
     }
+
 }
