@@ -32,6 +32,23 @@ public class OrderService {
             throw new RuntimeException("Sipariş bulunamadı: " + orderId);
         }
     }
+    public void deleteOrder(String orderId) {
+        if (orderRepository.findById(orderId).isPresent()) {
+            orderRepository.delete(orderId);
+            System.out.println("Sipariş sistemden silindi: " + orderId);
+        } else {
+            throw new RuntimeException("Silinecek sipariş bulunamadı: " + orderId);
+        }
+    }
+
+    public void updateOrderStatus(String orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Güncellenecek sipariş bulunamadı: " + orderId));
+
+        order.setStatus(newStatus);
+        orderRepository.save(order);
+        System.out.println("Sipariş durumu güncellendi: " + orderId + " -> " + newStatus);
+    }
 
     public Optional<Order> getOrder(String orderId) {
         return orderRepository.findById(orderId);

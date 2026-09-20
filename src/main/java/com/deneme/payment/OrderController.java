@@ -40,7 +40,25 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
+        try {
+            orderService.deleteOrder(orderId);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    @PatchMapping("/{orderId}/status")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable String orderId, @RequestParam OrderStatus status) {
+        try {
+            orderService.updateOrderStatus(orderId, status);
+            return ResponseEntity.ok(orderService.getOrder(orderId).get());
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @GetMapping("/revenue")
     public ResponseEntity<Double> getRevenue() {
         return ResponseEntity.ok(orderService.getDailyRevenue());
