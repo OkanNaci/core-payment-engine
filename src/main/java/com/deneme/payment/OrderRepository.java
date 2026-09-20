@@ -28,6 +28,11 @@ public class OrderRepository {
             paidOrders.add(orderId);
         });
     }
+    public void delete(String orderId) {
+        database.remove(orderId);
+
+        paidOrders.remove(orderId);
+    }
 
     public boolean isOrderPaid(String orderId) {
         return paidOrders.contains(orderId);

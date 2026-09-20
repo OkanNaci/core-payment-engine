@@ -51,5 +51,25 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.paid").value(false));
     }
 
+    @Test
+    public void shouldReturnNoContent_WhenOrderIsDeleted() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/orders/TEST-DELETE-123"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldReturnUpdatedOrder_WhenStatusIsPatched() throws Exception {
+        Order updatedOrder = new Order("TEST-PATCH-123");
+        updatedOrder.setStatus(OrderStatus.CANCELED);
+
+        when(orderService.getOrder("TEST-PATCH-123")).thenReturn(Optional.of(updatedOrder));
+
+
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch("/api/orders/TEST-PATCH-123/status")
+                        .param("status", "CANCELED"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CANCELED"));
+    }
+
 
 }
