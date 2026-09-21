@@ -1,15 +1,29 @@
 package com.deneme.payment;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "orders")
 public class Order {
-    private String orderId; // Jackson'ın değiştirebilmesi için 'final' kaldırıldı
-    private OrderStatus status = OrderStatus.PENDING;
-    private List<Product> cart = new ArrayList<>(); // 'final' kaldırıldı
 
-    public Order() {
+    @Id
+    @Column(name = "id")
+    private String orderId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status = OrderStatus.PENDING;
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private List<Product> cart = new ArrayList<>();
+
+
+    protected Order() {
     }
 
     public Order(String orderId) {
@@ -31,7 +45,7 @@ public class Order {
     public double getTotalAmount() {
         double total = 0;
         for (Product item : cart) {
-            total += item.price();
+            total += item.getPrice();
         }
         return total;
     }
@@ -50,6 +64,10 @@ public class Order {
 
     public void markAsPaid() {
         this.status = OrderStatus.COMPLETED;
+    }
+
+    public List<Product> getCart() {
+        return cart;
     }
 
     @Override
