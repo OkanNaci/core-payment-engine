@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 @Service
 @Transactional
@@ -51,7 +52,7 @@ public class OrderService {
         return orderRepository.findById(orderId);
     }
 
-    public double getDailyRevenue() {
+    public BigDecimal getDailyRevenue() {
         return orderRepository.calculateTotalRevenueByStatus(OrderStatus.COMPLETED);
     }
 }

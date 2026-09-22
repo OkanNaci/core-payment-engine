@@ -1,6 +1,8 @@
 package com.deneme.payment;
 
 import org.junit.jupiter.api.Test;
+import java.math.BigDecimal; // BigDecimal kütüphanesini ekledik
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderTest {
@@ -9,8 +11,9 @@ public class OrderTest {
     void shouldCalculateTotalAndMarkAsPaid() {
         Order order = new Order("ORD-001");
 
-        order.addProduct(new Product("Mekanik Klavye", 150.0));
-        order.addProduct(new Product("Oyuncu Mouse", 100.0));
+        // Sayıları new BigDecimal("...") şeklinde String olarak veriyoruz
+        order.addProduct(new Product("Mekanik Klavye", new BigDecimal("150.00")));
+        order.addProduct(new Product("Oyuncu Mouse", new BigDecimal("100.00")));
 
         PaymentMethod pos = new GarantiPos();
 
@@ -20,5 +23,4 @@ public class OrderTest {
 
         assertTrue(order.isPaid(), "Ödeme başarılıysa sipariş durumu değişmeli!");
     }
-
 }

@@ -1,14 +1,18 @@
 package com.deneme.payment;
 
+import java.math.BigDecimal;
+
 public class CryptoWallet implements PaymentMethod {
+
     @Override
-    public boolean processPayment(double amount) {
+    public boolean processPayment(BigDecimal amount) {
         System.out.println("Blockchain ağına bağlanılıyor...");
         System.out.println(amount + " USDT cüzdandan transfer edildi.");
         return true;
     }
+
     @Override
-    public boolean processRefund(double amount) {
+    public boolean processRefund(BigDecimal amount) {
         System.out.println("Kripto cüzdanına iade yapılıyor... Tutar: " + amount);
         return true;
     }

@@ -1,6 +1,7 @@
 package com.deneme.payment;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -15,19 +16,19 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private double price;
+    @Column(nullable = false, precision = 19, scale = 4)
+    private BigDecimal price;
 
     protected Product() {}
 
-    public Product(String name, double price) {
+    public Product(String name, BigDecimal price) {
         this.name = name;
         this.price = price;
     }
 
     public String getId() { return id; }
     public String getName() { return name; }
-    public double getPrice() { return price; }
+    public BigDecimal getPrice() { return price; }
 
     @Override
     public boolean equals(Object o) {
