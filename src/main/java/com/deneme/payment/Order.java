@@ -1,6 +1,7 @@
 package com.deneme.payment;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,10 +43,10 @@ public class Order {
         return orderId;
     }
 
-    public double getTotalAmount() {
-        double total = 0;
+    public BigDecimal getTotalAmount() {
+        BigDecimal total = BigDecimal.ZERO;
         for (Product item : cart) {
-            total += item.getPrice();
+            total = total.add(item.getPrice());
         }
         return total;
     }

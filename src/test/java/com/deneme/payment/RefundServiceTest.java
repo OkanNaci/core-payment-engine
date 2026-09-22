@@ -2,17 +2,18 @@ package com.deneme.payment;
 
 import com.deneme.payment.exception.NoRefundPendingException;
 import org.junit.jupiter.api.Test;
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RefundServiceTest {
 
-
     private final PaymentMethod fakePaymentMethod = new PaymentMethod() {
         @Override
-        public boolean processPayment(double amount) { return true; }
+        public boolean processPayment(BigDecimal amount) { return true; }
 
         @Override
-        public boolean processRefund(double amount) { return true; }
+        public boolean processRefund(BigDecimal amount) { return true; }
     };
 
     @Test

@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.math.BigDecimal;
+
 
 @RestController
 @RequestMapping("/api/orders")
@@ -60,7 +62,7 @@ public class OrderController {
         }
     }
     @GetMapping("/revenue")
-    public ResponseEntity<Double> getRevenue() {
+    public ResponseEntity<BigDecimal> getRevenue() {
         return ResponseEntity.ok(orderService.getDailyRevenue());
     }
 

@@ -28,7 +28,7 @@ public class RefundService {
 
         Order refundedOrder = refundStack.pop();
 
-        boolean isRefundSuccessful = paymentMethod.processRefund(100.0);
+        boolean isRefundSuccessful = paymentMethod.processRefund(refundedOrder.getTotalAmount());
 
         if (isRefundSuccessful) {
             refundedOrder.setStatus(OrderStatus.REFUNDED);

@@ -1,8 +1,9 @@
 package com.deneme.payment;
 
+import java.math.BigDecimal;
+
 public interface PaymentMethod {
-    boolean processPayment(double amount);
+    boolean processPayment(BigDecimal amount);
 
-
-    boolean processRefund(double amount);
+    boolean processRefund(BigDecimal amount);
 }
