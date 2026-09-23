@@ -1,12 +1,12 @@
 package com.deneme.payment;
 
+import com.deneme.payment.dto.CreateOrderRequest;
+import com.deneme.payment.dto.OrderResponse;
+import com.deneme.payment.dto.RevenueResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-import java.math.BigDecimal;
-
 
 @RestController
 @RequestMapping("/api/orders")
@@ -19,29 +19,31 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order newOrder) {
-        orderService.processNewOrder(newOrder);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
+        OrderResponse response = orderService.processNewOrder(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable String orderId) {
-        Optional<Order> order = orderService.getOrder(orderId);
-
-        return order.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    @PostMapping("/{orderId}/products")
-    public ResponseEntity<Order> addProductToOrder(@PathVariable String orderId, @RequestBody Product newProduct) {
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable String orderId) {
         try {
-            orderService.addProductToOrder(orderId, newProduct);
-
-            return ResponseEntity.ok(orderService.getOrder(orderId).get());
-
+            OrderResponse response = orderService.getOrder(orderId);
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{orderId}/products")
+    public ResponseEntity<OrderResponse> addProductToOrder(@PathVariable String orderId, @RequestBody Product newProduct) {
+        try {
+            orderService.addProductToOrder(orderId, newProduct);
+            return ResponseEntity.ok(orderService.getOrder(orderId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{orderId}")
     public ResponseEntity<Void> deleteOrder(@PathVariable String orderId) {
         try {
@@ -53,17 +55,17 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable String orderId, @RequestParam OrderStatus status) {
+    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable String orderId, @RequestParam OrderStatus status) {
         try {
             orderService.updateOrderStatus(orderId, status);
-            return ResponseEntity.ok(orderService.getOrder(orderId).get());
+            return ResponseEntity.ok(orderService.getOrder(orderId));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/revenue")
-    public ResponseEntity<BigDecimal> getRevenue() {
+    public ResponseEntity<RevenueResponse> getRevenue() {
         return ResponseEntity.ok(orderService.getDailyRevenue());
     }
-
 }
