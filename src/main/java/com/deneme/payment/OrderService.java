@@ -2,9 +2,13 @@ package com.deneme.payment;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.Optional;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import com.deneme.payment.dto.CreateOrderRequest;
+import com.deneme.payment.dto.OrderResponse;
+import com.deneme.payment.dto.RevenueResponse;
 
 @Service
 @Transactional
@@ -16,9 +20,13 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public void processNewOrder(Order order) {
-        System.out.println("OrderService: Sipariş PostgreSQL'e kaydediliyor -> " + order.getOrderId());
-        orderRepository.save(order);
+    public OrderResponse processNewOrder(CreateOrderRequest request) {
+        Order newOrder = new Order(request.orderId());
+
+        System.out.println("OrderService: Sipariş PostgreSQL'e kaydediliyor -> " + newOrder.getOrderId());
+        Order savedOrder = orderRepository.save(newOrder);
+
+        return mapToResponse(savedOrder);
     }
 
     public void addProductToOrder(String orderId, Product newProduct) {
@@ -48,11 +56,23 @@ public class OrderService {
         System.out.println("Sipariş durumu veritabanında güncellendi: " + orderId + " -> " + newStatus);
     }
 
-    public Optional<Order> getOrder(String orderId) {
-        return orderRepository.findById(orderId);
+    public OrderResponse getOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Sipariş bulunamadı: " + orderId));
+
+        return mapToResponse(order);
     }
 
-    public BigDecimal getDailyRevenue() {
-        return orderRepository.calculateTotalRevenueByStatus(OrderStatus.COMPLETED);
+    public RevenueResponse getDailyRevenue() {
+        BigDecimal total = orderRepository.calculateTotalRevenueByStatus(OrderStatus.COMPLETED);
+        return new RevenueResponse(total, "TRY", LocalDateTime.now());
+    }
+
+    private OrderResponse mapToResponse(Order order) {
+        return new OrderResponse(
+                order.getOrderId(),
+                order.getStatus().name(),
+                order.getTotalAmount()
+        );
     }
 }
