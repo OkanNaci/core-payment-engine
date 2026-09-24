@@ -19,7 +19,7 @@ public class Order {
     private OrderStatus status = OrderStatus.PENDING;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private List<Product> cart = new ArrayList<>();
 
