@@ -11,6 +11,10 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, String> {
 
     List<Order> findByStatus(OrderStatus status);
+
     @Query("SELECT COALESCE(SUM(p.price), 0) FROM Order o JOIN o.cart p WHERE o.status = :status")
     BigDecimal calculateTotalRevenueByStatus(@Param("status") OrderStatus status);
+
+    @Query("SELECT o FROM Order o JOIN FETCH o.cart")
+    List<Order> findAllWithCart();
 }

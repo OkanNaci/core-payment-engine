@@ -3,10 +3,11 @@ package com.deneme.payment;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name="wallets")
+@Check(constraints = "balance >= 0")
 public class Wallet {
 
     @Id
