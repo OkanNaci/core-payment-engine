@@ -39,3 +39,5 @@ build/
 .DS_Store
 
 .idea/
+# Kisisel Kod Ciktilari
+tum_kodlar.txt
