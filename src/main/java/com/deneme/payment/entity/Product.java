@@ -1,9 +1,8 @@
-package com.deneme.payment;
+package com.deneme.payment.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "products")

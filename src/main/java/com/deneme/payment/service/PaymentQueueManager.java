@@ -1,4 +1,6 @@
-package com.deneme.payment;
+package com.deneme.payment.service;
+
+import com.deneme.payment.entity.Order;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

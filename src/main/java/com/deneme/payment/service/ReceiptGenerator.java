@@ -1,5 +1,7 @@
 
-package com.deneme.payment;
+package com.deneme.payment.service;
+
+import com.deneme.payment.entity.Order;
 
 public class ReceiptGenerator {
 
