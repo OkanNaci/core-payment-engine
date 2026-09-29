@@ -1,8 +1,9 @@
-package com.deneme.payment;
+package com.deneme.payment.controller;
 
 import com.deneme.payment.dto.CreateOrderRequest;
 import com.deneme.payment.dto.OrderResponse;
 import com.deneme.payment.dto.RevenueResponse;
+import com.deneme.payment.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

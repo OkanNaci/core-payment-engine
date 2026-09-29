@@ -1,5 +1,11 @@
-package com.deneme.payment;
+package com.deneme.payment.service;
 
+import com.deneme.payment.entity.Order;
+import com.deneme.payment.entity.OrderStatus;
+import com.deneme.payment.entity.Product;
+import com.deneme.payment.entity.Wallet;
+import com.deneme.payment.repository.OrderRepository;
+import com.deneme.payment.repository.WalletRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

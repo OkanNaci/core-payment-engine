@@ -1,5 +1,6 @@
-package com.deneme.payment;
+package com.deneme.payment.service;
 
+import com.deneme.payment.entity.Order;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package com.deneme.payment;
+package com.deneme.payment.service.strategy;
 
 import java.math.BigDecimal;
 

@@ -1,5 +1,7 @@
-package com.deneme.payment;
+package com.deneme.payment.repository;
 
+import com.deneme.payment.entity.Order;
+import com.deneme.payment.entity.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

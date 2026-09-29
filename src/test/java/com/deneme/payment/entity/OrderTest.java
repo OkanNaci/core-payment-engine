@@ -1,5 +1,7 @@
-package com.deneme.payment;
+package com.deneme.payment.entity;
 
+import com.deneme.payment.service.strategy.GarantiPos;
+import com.deneme.payment.service.strategy.PaymentMethod;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal; // BigDecimal kütüphanesini ekledik
 
