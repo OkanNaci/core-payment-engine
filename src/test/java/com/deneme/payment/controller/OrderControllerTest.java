@@ -44,12 +44,14 @@ public class OrderControllerTest {
     @Test
     public void shouldCreateOrder_WhenValidJsonIsSent() throws Exception {
         String orderJson = """
-                {
-                    "orderId": "POST-TEST-004"
-                }
-                """;
+            {
+                "orderId": "POST-TEST-004",
+                "amount": 250.50,
+                "currency": "TRY"
+            }
+            """;
 
-        OrderResponse mockResponse = new OrderResponse("POST-TEST-004", "PENDING", BigDecimal.ZERO);
+        OrderResponse mockResponse = new OrderResponse("POST-TEST-004", "PENDING", new BigDecimal("250.50"));
 
         when(orderService.processNewOrder(any(CreateOrderRequest.class))).thenReturn(mockResponse);
 
@@ -60,7 +62,6 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId").value("POST-TEST-004"))
                 .andExpect(jsonPath("$.status").value("PENDING"));
     }
-
     @Test
     public void shouldReturnNoContent_WhenOrderIsDeleted() throws Exception {
         mockMvc.perform(delete("/api/orders/TEST-DELETE-123"))
