@@ -3,12 +3,15 @@ package com.deneme.payment.controller;
 import com.deneme.payment.dto.CreateOrderRequest;
 import com.deneme.payment.dto.OrderResponse;
 import com.deneme.payment.dto.RevenueResponse;
+import com.deneme.payment.service.JwtService;
 import com.deneme.payment.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithMockUser; // EKLENDİ
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -16,6 +19,7 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf; // EKLENDİ
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,9 +31,16 @@ public class OrderControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private JwtService jwtService;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
+
+    @MockBean
     private OrderService orderService;
 
     @Test
+    @WithMockUser // EKLENDİ: Teste giriş yapmış yasal bir kullanıcı simülasyonu
     public void shouldReturnOrder_WhenOrderExists() throws Exception {
         OrderResponse mockResponse = new OrderResponse("TEST-123", "PENDING", BigDecimal.ZERO);
 
@@ -42,6 +53,7 @@ public class OrderControllerTest {
     }
 
     @Test
+    @WithMockUser // EKLENDİ
     public void shouldCreateOrder_WhenValidJsonIsSent() throws Exception {
         String orderJson = """
             {
@@ -56,31 +68,38 @@ public class OrderControllerTest {
         when(orderService.processNewOrder(any(CreateOrderRequest.class))).thenReturn(mockResponse);
 
         mockMvc.perform(post("/api/orders")
+                        .with(csrf()) // EKLENDİ: POST için test ortamı CSRF bariyerini aşma
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(orderJson))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.orderId").value("POST-TEST-004"))
                 .andExpect(jsonPath("$.status").value("PENDING"));
     }
+
     @Test
+    @WithMockUser // EKLENDİ
     public void shouldReturnNoContent_WhenOrderIsDeleted() throws Exception {
-        mockMvc.perform(delete("/api/orders/TEST-DELETE-123"))
+        mockMvc.perform(delete("/api/orders/TEST-DELETE-123")
+                        .with(csrf())) // EKLENDİ: DELETE için test ortamı CSRF bariyerini aşma
                 .andExpect(status().isNoContent());
     }
 
     @Test
+    @WithMockUser // EKLENDİ
     public void shouldReturnUpdatedOrder_WhenStatusIsPatched() throws Exception {
         OrderResponse mockResponse = new OrderResponse("TEST-PATCH-123", "CANCELED", BigDecimal.ZERO);
 
         when(orderService.getOrder("TEST-PATCH-123")).thenReturn(mockResponse);
 
         mockMvc.perform(patch("/api/orders/TEST-PATCH-123/status")
+                        .with(csrf()) // EKLENDİ: PATCH için test ortamı CSRF bariyerini aşma
                         .param("status", "CANCELED"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CANCELED"));
     }
 
     @Test
+    @WithMockUser // EKLENDİ
     public void shouldReturnRevenueResponse_WhenGetRevenueIsCalled() throws Exception {
         RevenueResponse mockResponse = new RevenueResponse(
                 new BigDecimal("250.50"),
