@@ -17,9 +17,21 @@ public class Wallet {
     @Column(nullable = false,precision = 19 , scale = 4)
     private BigDecimal balance;
 
-    protected Wallet(){};
+    protected Wallet(){}
 
-    public Wallet(String id,  BigDecimal initialBalance) {
+    public Wallet(String id, BigDecimal initialBalance) {
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("Wallet id cannot be blank.");
+        }
+
+        if (initialBalance == null) {
+            throw new IllegalArgumentException("Initial balance cannot be null.");
+        }
+
+        if (initialBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Initial balance cannot be negative.");
+        }
+
         this.id = id;
         this.balance = initialBalance;
     }
