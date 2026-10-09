@@ -4,6 +4,7 @@ package com.deneme.payment.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import org.hibernate.annotations.Check;
+import com.deneme.payment.exception.InsufficientBalanceException;
 
 @Entity
 @Table(name="wallets")
@@ -44,14 +45,28 @@ public class Wallet {
         return balance;
     }
 
-    public void withdraw(BigDecimal amount) {
-        if (this.balance.compareTo(amount) < 0) {
-            throw new RuntimeException("Yetersiz bakiye! İşlem iptal ediliyor.");
+    private void validatePositiveAmount(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("Amount cannot be null.");
         }
-        this.balance = this.balance.subtract(amount);
-    }
-    public void deposit(BigDecimal amount) {
-        this.balance = this.balance.add(amount);
+
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be greater than zero.");
+        }
     }
 
+    public void withdraw(BigDecimal amount) {
+        validatePositiveAmount(amount);
+
+        if (balance.compareTo(amount) < 0) {
+            throw new InsufficientBalanceException();
+        }
+
+        balance = balance.subtract(amount);
+    }
+
+    public void deposit(BigDecimal amount) {
+        validatePositiveAmount(amount);
+        balance = balance.add(amount);
+    }
 }
