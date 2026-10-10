@@ -28,17 +28,20 @@ public class Order {
     }
 
     public Order(String orderId) {
-        this.orderId = orderId;
-    }
+        if (orderId == null || orderId.isBlank()) {
+            throw new IllegalArgumentException("Order id cannot be blank.");
+        }
 
-    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
     public void addProduct(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null.");
+        }
+
         cart.add(product);
     }
-
     public String getOrderId() {
         return orderId;
     }
@@ -68,9 +71,8 @@ public class Order {
     }
 
     public List<Product> getCart() {
-        return cart;
+        return List.copyOf(cart);
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.test.context.support.WithMockUser; // EKLENDİ
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf; // EKLENDİ
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +40,7 @@ public class OrderControllerTest {
     private OrderService orderService;
 
     @Test
-    @WithMockUser // EKLENDİ: Teste giriş yapmış yasal bir kullanıcı simülasyonu
+    @WithMockUser
     public void shouldReturnOrder_WhenOrderExists() throws Exception {
         OrderResponse mockResponse = new OrderResponse("TEST-123", "PENDING", BigDecimal.ZERO);
 
@@ -53,7 +53,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    @WithMockUser // EKLENDİ
+    @WithMockUser
     public void shouldCreateOrder_WhenValidJsonIsSent() throws Exception {
         String orderJson = """
             {
@@ -68,7 +68,7 @@ public class OrderControllerTest {
         when(orderService.processNewOrder(any(CreateOrderRequest.class))).thenReturn(mockResponse);
 
         mockMvc.perform(post("/api/orders")
-                        .with(csrf()) // EKLENDİ: POST için test ortamı CSRF bariyerini aşma
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(orderJson))
                 .andExpect(status().isCreated())
@@ -77,29 +77,29 @@ public class OrderControllerTest {
     }
 
     @Test
-    @WithMockUser // EKLENDİ
+    @WithMockUser
     public void shouldReturnNoContent_WhenOrderIsDeleted() throws Exception {
         mockMvc.perform(delete("/api/orders/TEST-DELETE-123")
-                        .with(csrf())) // EKLENDİ: DELETE için test ortamı CSRF bariyerini aşma
+                        .with(csrf()))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    @WithMockUser // EKLENDİ
+    @WithMockUser
     public void shouldReturnUpdatedOrder_WhenStatusIsPatched() throws Exception {
         OrderResponse mockResponse = new OrderResponse("TEST-PATCH-123", "CANCELED", BigDecimal.ZERO);
 
         when(orderService.getOrder("TEST-PATCH-123")).thenReturn(mockResponse);
 
         mockMvc.perform(patch("/api/orders/TEST-PATCH-123/status")
-                        .with(csrf()) // EKLENDİ: PATCH için test ortamı CSRF bariyerini aşma
+                        .with(csrf())
                         .param("status", "CANCELED"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CANCELED"));
     }
 
     @Test
-    @WithMockUser // EKLENDİ
+    @WithMockUser
     public void shouldReturnRevenueResponse_WhenGetRevenueIsCalled() throws Exception {
         RevenueResponse mockResponse = new RevenueResponse(
                 new BigDecimal("250.50"),
