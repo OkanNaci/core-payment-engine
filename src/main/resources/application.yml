@@ -10,9 +10,9 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/payment_db
-    username: postgres
-    password: Okan.144
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -24,4 +24,4 @@ spring:
         format_sql: true
 
 jwt:
-  secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  secret-key: ${JWT_SECRET}
